@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "LensDeciderAPI": {
+      "applicationId": "BxRO5bNaOE8Ihqp2AUkYTaQd8TBoipuyzmPlGimI"
+    },
+    "_default": {
+      "link": "LensDeciderAPI"
+    }
+  }
+}
