@@ -11,7 +11,7 @@ Parse.Cloud.define("getAmountInfo", function(request, response) {
       success: function(results) {
         resultList = []
         for(var i = 0; i < results.length; i++) {
-          resultList.push({"name": results[i].get("name"), "amountOfPhotos": 0);
+          resultList.push({"name": results[i].get("name"), "amountOfPhotos": 0});
         }
         response.success(resultList);
       },
