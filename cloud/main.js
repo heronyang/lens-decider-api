@@ -7,7 +7,7 @@ Parse.Cloud.define("hello", function(request, response) {
 
 Parse.Cloud.define("getPhotosOfGroup", function(request, response) {
   var query = new Parse.Query("FlickrGroup");
-  query.equalTo("name", request.params.groupName);
+  query.equalTo("flickrId", request.params.flickrId);
   query.find({
       success: function(results) {
         var r = results[0].relation("photos");
