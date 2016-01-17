@@ -1,53 +1,55 @@
+var _ = require('underscore');
 
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
-Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
-});
+Parse.Cloud.define("getAmountOfGroup", function(request, response) {
 
-Parse.Cloud.define("getAmountInfo", function(request, response) {
   var query = new Parse.Query("FlickrGroup");
-  query.find({
-      success: function(results) {
-        resultList = [];
-        for(var i = 0; i < results.length; i++) {
+  query.equalTo("flickrId", request.params.flickrId);
 
-          var r = results[i].relation("photos");
-          r.query().find({
-              success: function(photos){
-                resultList.push({"name": results[i].get("name"), "amountOfPhotos": photos.length});
-              },
-              error: function(error){
-                response.error(error);
-              }
-          });
+  query.first().then(function(group) {
 
-        }
-        response.success(resultList);
-      },
-      error: function() {
-        response.error("FlickrGroup lookup failed");
-      }
+    var queryOfPhotos = group.relation("photos").query();
+
+    queryOfPhotos.count().then(function(amount){
+      response.success(amount);
+    }, function(error) {
+      response.error("getAmountOfGroup: can't get count");
+    });
+
+  }, function(error) {
+
+    console.log(error);
+    response.error("getAmountOfGroup can't get query of such group");
+
   });
+
 });
 
 Parse.Cloud.define("getPhotosOfGroup", function(request, response) {
+
   var query = new Parse.Query("FlickrGroup");
   query.equalTo("flickrId", request.params.flickrId);
-  query.find({
-      success: function(results) {
-        var r = results[0].relation("photos");
-        r.query().find({
-            success: function(photos){
-              response.success(photos); //list of trophies pointed to by that player's "trophies" column.
-            },
-            error: function(error){
-              response.error(error);
-            }
-        });
-      },
-      error: function() {
-        response.error("FlickrGroup lookup failed");
-      }
+
+  query.first().then(function(group) {
+
+    var queryOfPhotos = group.relation("photos").query();
+    return queryOfPhotos.find();
+
+  }).then(function(photos){
+
+    response.success(formatDataForResponse(photos));
+
+  }, function(error) {
+
+    console.log(error);
+    response.error("getAmountOfGroup can't get query of such group");
+
   });
+
 });
+
+function formatDataForResponse(photos) {
+
+  photos.sort( function() { return 0.5 - Math.random() } );
+  return photos.slice(0, 20);
+
+}
