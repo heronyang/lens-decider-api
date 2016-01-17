@@ -9,9 +9,19 @@ Parse.Cloud.define("getAmountInfo", function(request, response) {
   var query = new Parse.Query("FlickrGroup");
   query.find({
       success: function(results) {
-        resultList = []
+        resultList = [];
         for(var i = 0; i < results.length; i++) {
-          resultList.push({"name": results[i].get("name"), "amountOfPhotos": 0});
+
+          var r = results[i].relation("photos");
+          r.query().find({
+              success: function(photos){
+                resultList.push({"name": results[i].get("name"), "amountOfPhotos": photos.length});
+              },
+              error: function(error){
+                response.error(error);
+              }
+          });
+
         }
         response.success(resultList);
       },
@@ -34,7 +44,7 @@ Parse.Cloud.define("getPhotosOfGroup", function(request, response) {
             error: function(error){
               response.error(error);
             }
-        })
+        });
       },
       error: function() {
         response.error("FlickrGroup lookup failed");
