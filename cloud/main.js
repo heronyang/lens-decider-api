@@ -1,11 +1,11 @@
 
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
-Parse.Cloud.define("1/hello", function(request, response) {
+Parse.Cloud.define("hello", function(request, response) {
   response.success("Hello world!");
 });
 
-Parse.Cloud.define("1/getPhotosOfGroup", function(request, response) {
+Parse.Cloud.define("getPhotosOfGroup", function(request, response) {
   var query = new Parse.Query("FlickrGroup");
   query.equalTo("name", request.params.groupName);
   query.find({
