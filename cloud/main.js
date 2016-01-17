@@ -9,11 +9,11 @@ Parse.Cloud.define("getAmountInfo", function(request, response) {
   var query = new Parse.Query("FlickrGroup");
   query.find({
       success: function(results) {
-        resultJson = []
+        resultList = []
         for(var i = 0; i < results.length; i++) {
-          resultJson.push(results[i].get("name"));
+          resultList.push({"name": results[i].get("name"), "amountOfPhotos": 0);
         }
-        response.success(resultJson);
+        response.success(resultList);
       },
       error: function() {
         response.error("FlickrGroup lookup failed");
