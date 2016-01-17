@@ -5,6 +5,22 @@ Parse.Cloud.define("hello", function(request, response) {
   response.success("Hello world!");
 });
 
+Parse.Cloud.define("getAmountInfo", function(request, response) {
+  var query = new Parse.Query("FlickrGroup");
+  query.find({
+      success: function(results) {
+        responseList = []
+        for(var i = 0; i < results.length; i++) {
+          responseList.push(results[i].get("name"));
+        }
+        response.success(responseList.toJSON());
+      },
+      error: function() {
+        response.error("FlickrGroup lookup failed");
+      }
+  });
+});
+
 Parse.Cloud.define("getPhotosOfGroup", function(request, response) {
   var query = new Parse.Query("FlickrGroup");
   query.equalTo("flickrId", request.params.flickrId);
