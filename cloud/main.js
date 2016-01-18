@@ -1,5 +1,3 @@
-var _ = require('underscore');
-
 Parse.Cloud.define("getAmountOfGroup", function(request, response) {
 
   var query = new Parse.Query("FlickrGroup");
@@ -8,12 +6,11 @@ Parse.Cloud.define("getAmountOfGroup", function(request, response) {
   query.first().then(function(group) {
 
     var queryOfPhotos = group.relation("photos").query();
+    return queryOfPhotos.count();
 
-    queryOfPhotos.count().then(function(amount){
-      response.success(amount);
-    }, function(error) {
-      response.error("getAmountOfGroup: can't get count");
-    });
+  }).then(function(amount) {
+
+    response.success(amount);
 
   }, function(error) {
 
@@ -41,7 +38,7 @@ Parse.Cloud.define("getPhotosOfGroup", function(request, response) {
   }, function(error) {
 
     console.log(error);
-    response.error("getAmountOfGroup can't get query of such group");
+    response.error("getPhotosOfGroup can't get query of such group");
 
   });
 
